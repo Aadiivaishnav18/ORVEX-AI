@@ -3,7 +3,7 @@ import { LOGO } from "../utils/constant";
 
 const Header = () => {
   return (
-    <header className="relative z-50 h-28 w-full bg-black/90 px-4 sm:px-6 lg:px-8">
+    <header className="relative z-50 h-28 w-full bg-black/90 px-4 sm:px-6 lg:px-8 cursor-pointer">
       <nav className="flex h-full w-full items-center justify-between">
 
         {/* Logo */}
@@ -31,7 +31,7 @@ const Header = () => {
         </div>
 
         {/* Button */}
-        <button className="rounded-lg border border-cyan-400/60 bg-cyan-500/10 px-5 py-2 text-sm font-semibold text-cyan-300 transition duration-300 hover:bg-cyan-400 hover:text-black hover:shadow-[0_0_20px_rgba(0,200,255,0.4)]">
+        <button className="rounded-lg border border-cyan-400/60 bg-cyan-500/10 px-5 py-2 text-sm font-semibold text-cyan-300 transition duration-100 hover:bg-cyan-400 hover:text-black cursor-pointer">
           Get Started
         </button>
 
