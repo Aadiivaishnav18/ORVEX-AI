@@ -1,9 +1,10 @@
 
 import { useState } from "react";
 import { LOGO } from "../utils/constant";
+import { Link } from "react-router-dom";
 
 const navLinks = [
-  { label: "Home", href: "#home" },
+  { label: "Home", href: "/" },
   { label: "Features", href: "#features" },
   { label: "About", href: "#about" },
 ];
@@ -11,11 +12,18 @@ const navLinks = [
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <header className="relative z-50 w-full border-b border-cyan-950/60 bg-black/95">
       <nav className="flex min-h-20 items-center justify-between px-4 py-3 sm:px-6">
         {/* Logo */}
-        <a href="#home" className="shrink-0" aria-label="Orvex-AI home">
+        <Link
+          to="/"
+          onClick={closeMenu}
+          className="shrink-0"
+          aria-label="Orvex-AI home"
+        >
           {LOGO ? (
             <img
               src={LOGO}
@@ -30,9 +38,9 @@ const Header = () => {
               Orvex-AI
             </span>
           )}
-        </a>
+        </Link>
 
-        {/* Desktop navigation */}
+        {/* Desktop Navigation */}
         <ul className="hidden items-center gap-6 text-sm text-gray-300 md:flex lg:gap-8">
           {navLinks.map((link) => (
             <li key={link.label}>
@@ -46,15 +54,15 @@ const Header = () => {
           ))}
         </ul>
 
-        {/* Desktop button */}
-        <button
-          type="button"
-          className="hidden h-10 items-center rounded-lg border border-cyan-400/60 bg-cyan-500/10 px-5 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400 hover:text-black md:inline-flex"
+        {/* Desktop Get Started */}
+        <Link
+          to="/login"
+          className="hidden h-10 items-center justify-center rounded-lg border border-cyan-400/60 bg-cyan-500/10 px-5 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400 hover:text-black md:inline-flex"
         >
           Get Started
-        </button>
+        </Link>
 
-        {/* Mobile menu toggle */}
+        {/* Mobile Menu Toggle */}
         <button
           type="button"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -69,10 +77,11 @@ const Header = () => {
         </button>
       </nav>
 
-      {/* Mobile menu */}
+      {/* Mobile Menu */}
       <div
         id="mobile-menu"
         aria-hidden={!menuOpen}
+        inert={!menuOpen}
         className={`grid overflow-hidden border-t border-cyan-950/60 bg-black transition-[grid-template-rows,opacity] duration-300 ease-in-out md:hidden ${
           menuOpen
             ? "grid-rows-[1fr] opacity-100"
@@ -85,8 +94,7 @@ const Header = () => {
               <li key={link.label}>
                 <a
                   href={link.href}
-                  tabIndex={menuOpen ? 0 : -1}
-                  onClick={() => setMenuOpen(false)}
+                  onClick={closeMenu}
                   className="block rounded-lg px-3 py-3 text-sm text-gray-300 transition-colors hover:bg-cyan-400/10 hover:text-cyan-300"
                 >
                   {link.label}
@@ -96,14 +104,13 @@ const Header = () => {
           </ul>
 
           <div className="px-4 pb-4">
-            <button
-              type="button"
-              tabIndex={menuOpen ? 0 : -1}
-              onClick={() => setMenuOpen(false)}
-              className="h-10 w-full rounded-lg border border-cyan-400/60 bg-cyan-500/10 text-sm font-semibold text-cyan-300 transition-colors hover:bg-cyan-400 hover:text-black"
+            <Link
+              to="/login"
+              onClick={closeMenu}
+              className="flex h-10 w-full items-center justify-center rounded-lg border border-cyan-400/60 bg-cyan-500/10 text-sm font-semibold text-cyan-300 transition-colors hover:bg-cyan-400 hover:text-black"
             >
               Get Started
-            </button>
+            </Link>
           </div>
         </div>
       </div>
