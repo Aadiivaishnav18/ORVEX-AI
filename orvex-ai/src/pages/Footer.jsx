@@ -1,8 +1,11 @@
 
 const Footer = () => {
   return (
-    <footer className="w-full pt-10 items-center h-25 border-t border-slate-800 bg-black px-4 py-5 text-center text-xs tracking-wide text-gray-400">
-      Copyright © {new Date().getFullYear()} Aditya Vaishnav. All rights reserved.
+    <footer className="w-full border-t border-slate-800 bg-black px-3 py-4 sm:px-4 sm:py-6">
+      <p className="text-center text-[10px] leading-relaxed tracking-wide text-gray-400 sm:text-sm">
+        Copyright © {new Date().getFullYear()} Aditya Vaishnav.
+        All rights reserved.
+      </p>
     </footer>
   );
 };
