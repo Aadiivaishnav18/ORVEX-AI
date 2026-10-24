@@ -4,15 +4,15 @@ import Footer from "./Footer";
 
 const Hero = () => {
   return (
-    <main className="flex flex-1 flex-col bg-black text-white">
+    <main className="w-full bg-black text-white">
       <section
         id="home"
-        className="w-full"
+        className="relative h-[calc(100svh-64px)] w-full overflow-hidden sm:h-[calc(100svh-80px)] lg:h-auto"
       >
         <img
           src={BG_IMG}
           alt="ORVEX-AI Background"
-          className="block h-auto w-full"
+          className="block h-full w-full object-cover object-center lg:h-auto lg:object-contain"
         />
       </section>
 
