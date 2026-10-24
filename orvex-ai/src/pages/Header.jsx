@@ -2,28 +2,37 @@
 import { useState } from "react";
 import { LOGO } from "../utils/constant";
 
+const navLinks = [
+  { label: "Home", href: "#home" },
+  { label: "Features", href: "#features" },
+  { label: "About", href: "#about" },
+];
+
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const navLinks = [
-    { label: "Home", href: "#home" },
-    { label: "Features", href: "#features" },
-    { label: "About", href: "#about" },
-  ];
-
   return (
     <header className="relative z-50 w-full border-b border-cyan-950/60 bg-black/95">
-      <nav className="flex min-h-16 items-center justify-between px-4 py-2 sm:min-h-20 sm:px-6">
+      <nav className="flex min-h-20 items-center justify-between px-4 py-3 sm:px-6">
         {/* Logo */}
-        <a href="#home" className="shrink-0">
-          <img
-            src={LOGO}
-            alt="Orvex-AI Logo"
-            className="h-12 w-auto object-contain sm:h-14 lg:h-16"
-          />
+        <a href="#home" className="shrink-0" aria-label="Orvex-AI home">
+          {LOGO ? (
+            <img
+              src={LOGO}
+              alt="Orvex-AI Logo"
+              className="h-12 w-auto object-contain sm:h-14 lg:h-16"
+              onError={(event) => {
+                event.currentTarget.style.display = "none";
+              }}
+            />
+          ) : (
+            <span className="text-xl font-bold text-cyan-400">
+              Orvex-AI
+            </span>
+          )}
         </a>
 
-        {/* Desktop Links */}
+        {/* Desktop navigation */}
         <ul className="hidden items-center gap-6 text-sm text-gray-300 md:flex lg:gap-8">
           {navLinks.map((link) => (
             <li key={link.label}>
@@ -37,15 +46,15 @@ const Header = () => {
           ))}
         </ul>
 
-        {/* Desktop Button */}
+        {/* Desktop button */}
         <button
           type="button"
-          className="hidden h-10 rounded-lg border border-cyan-400/60 bg-cyan-500/10 px-5 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400 hover:text-black md:inline-flex md:items-center"
+          className="hidden h-10 items-center rounded-lg border border-cyan-400/60 bg-cyan-500/10 px-5 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400 hover:text-black md:inline-flex"
         >
           Get Started
         </button>
 
-        {/* Hamburger */}
+        {/* Mobile menu toggle */}
         <button
           type="button"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -54,13 +63,13 @@ const Header = () => {
           onClick={() => setMenuOpen((open) => !open)}
           className="flex h-10 w-10 items-center justify-center rounded-lg border border-cyan-400/50 text-cyan-300 transition-colors hover:bg-cyan-400/10 md:hidden"
         >
-          <span className="text-2xl leading-none">
+          <span className="text-2xl leading-none" aria-hidden="true">
             {menuOpen ? "×" : "☰"}
           </span>
         </button>
       </nav>
 
-      {/* Animated Mobile Menu */}
+      {/* Mobile menu */}
       <div
         id="mobile-menu"
         aria-hidden={!menuOpen}

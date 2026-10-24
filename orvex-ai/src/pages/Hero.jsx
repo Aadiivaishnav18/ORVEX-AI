@@ -7,12 +7,12 @@ const Hero = () => {
     <main className="w-full bg-black text-white">
       <section
         id="home"
-        className="relative h-[calc(100svh-64px)] w-full overflow-hidden sm:h-[calc(100svh-80px)] lg:h-auto"
+        className="h-[380px] w-full overflow-hidden sm:h-auto"
       >
         <img
           src={BG_IMG}
-          alt="ORVEX-AI Background"
-          className="block h-full w-full object-cover object-center lg:h-auto lg:object-contain"
+          alt="ORVEX-AI Banner"
+          className="h-full w-full object-cover object-center sm:h-auto sm:object-contain"
         />
       </section>
 
