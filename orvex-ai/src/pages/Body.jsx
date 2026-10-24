@@ -1,13 +1,14 @@
-import Hero from "./Hero";
+
 import Header from "./Header";
-const Body = () =>{
+import Hero from "./Hero";
 
-    return (
-        <div>
-           <Header />
-            <Hero />
-        </div>
-    )
-}
+const Body = () => {
+  return (
+    <div className="w-full bg-black">
+      <Header />
+      <Hero />
+    </div>
+  );
+};
 
-export default Body ;
+export default Body;
