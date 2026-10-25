@@ -4,7 +4,7 @@ import Hero from "./Hero";
 
 const Body = () => {
   return (
-    <div className="flex w-full flex-1 flex-col bg-black">
+    <div className="flex min-h-screen w-full flex-col bg-black">
       <Header />
       <Hero />
     </div>
