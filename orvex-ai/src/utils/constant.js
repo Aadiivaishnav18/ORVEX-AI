@@ -1,7 +1,7 @@
 
 import logo from "../assets/logo.png";
 import Background from "../assets/Background.png";
-import login from "../assets/login.jpg";
+import login from "../assets/login.png";
 
 export const LOGO = logo;
 export const BG_IMG = Background;
