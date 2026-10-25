@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, LockKeyhole } from "lucide-react";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigate } from "react-router-dom";
 
 import { auth } from "../utils/firebase";
 import { LOGIN_IMG } from "../utils/constant";
