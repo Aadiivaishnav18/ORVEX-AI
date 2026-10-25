@@ -1,14 +1,15 @@
 
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Mail, LockKeyhole } from "lucide-react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
 
 import { auth } from "../utils/firebase";
 import { LOGIN_IMG } from "../utils/constant";
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -25,27 +26,23 @@ const Login = () => {
         email.trim(),
         password
       );
+
+      navigate("/dashboard", { replace: true });
     } catch (err) {
       console.error("Login error:", err.code, err.message);
 
       const messages = {
-        "auth/invalid-credential":
-          "Incorrect email or password.",
-        "auth/invalid-email":
-          "Please enter a valid email address.",
-        "auth/user-disabled":
-          "This account has been disabled.",
-        "auth/too-many-requests":
-          "Too many attempts. Try again later.",
-        "auth/network-request-failed":
-          "Check your internet connection.",
+        "auth/invalid-credential": "Incorrect email or password.",
+        "auth/invalid-email": "Please enter a valid email address.",
+        "auth/user-disabled": "This account has been disabled.",
+        "auth/too-many-requests": "Too many attempts. Try again later.",
+        "auth/network-request-failed": "Check your internet connection.",
         "auth/operation-not-allowed":
           "Enable Email/Password in Firebase Authentication settings.",
       };
 
       setError(
-        messages[err.code] ||
-          "Unable to sign in. Please try again."
+        messages[err.code] || "Unable to sign in. Please try again."
       );
     } finally {
       setLoading(false);
@@ -55,17 +52,18 @@ const Login = () => {
   return (
     <main className="flex min-h-screen w-full flex-col bg-black text-white md:flex-row">
 
-      {/* Left Section: Original Branding Layout */}
-      <section className="relative flex min-h-[35vh] w-full overflow-hidden md:min-h-screen md:w-1/2 lg:w-[58%]">
+      {/* LEFT IMAGE AND BRANDING */}
+      <section className="relative flex h-[280px] w-full shrink-0 overflow-hidden bg-[#030712] sm:h-[340px] md:sticky md:top-0 md:h-screen md:w-1/2 md:flex-1 lg:w-[58%]">
+
         <img
           src={LOGIN_IMG}
           alt="Orvex-AI background"
           className="absolute inset-0 h-full w-full object-cover object-center"
         />
 
-        <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-black/10 to-[#030712]/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-black/10 to-[#030712]/90 md:bg-gradient-to-r md:from-black/30 md:via-black/10 md:to-[#030712]/70" />
 
-        <div className="relative z-10 flex w-full flex-col justify-end p-6 sm:p-10 lg:p-16">
+        <div className="relative z-10 flex w-full flex-col justify-end p-5 sm:p-8 md:p-10 lg:p-16">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-cyan-300 sm:text-sm sm:tracking-[0.4em]">
             Welcome to
           </p>
@@ -86,9 +84,10 @@ const Login = () => {
         </div>
       </section>
 
-      {/* Right Section: Functional Firebase Login */}
-      <section className="flex min-h-[65vh] w-full items-center justify-center px-4 py-8 sm:px-5 sm:py-10 md:min-h-screen md:w-1/2 lg:w-[42%]">
-        <div className="w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-xl sm:p-8 md:p-10">
+      {/* RIGHT LOGIN FORM */}
+      <section className="flex min-h-[calc(100vh-280px)] w-full flex-1 items-center justify-center bg-[#030712] px-4 py-8 sm:px-6 sm:py-10 md:min-h-screen md:w-1/2 md:px-8 lg:w-[42%] lg:flex-none lg:px-12">
+
+        <div className="w-full max-w-md overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 shadow-2xl backdrop-blur-xl sm:p-8 md:p-8 lg:p-10">
 
           <h2 className="mb-2 text-3xl font-bold">
             Sign In
@@ -100,7 +99,7 @@ const Login = () => {
 
           <form onSubmit={handleSubmit} className="space-y-5">
 
-            {/* Email */}
+            {/* EMAIL */}
             <div className="relative">
               <Mail
                 size={20}
@@ -121,7 +120,7 @@ const Login = () => {
               />
             </div>
 
-            {/* Password */}
+            {/* PASSWORD */}
             <div className="relative">
               <LockKeyhole
                 size={20}
@@ -142,14 +141,14 @@ const Login = () => {
               />
             </div>
 
-            {/* Firebase Error */}
+            {/* ERROR */}
             {error && (
               <p role="alert" className="text-sm text-red-400">
                 {error}
               </p>
             )}
 
-            {/* Submit */}
+            {/* LOGIN BUTTON */}
             <button
               type="submit"
               disabled={loading}
@@ -159,7 +158,7 @@ const Login = () => {
             </button>
           </form>
 
-          {/* Signup Link */}
+          {/* SIGNUP LINK */}
           <p className="mt-6 text-center text-xs text-gray-400 sm:text-sm">
             New to Orvex?{" "}
             <Link

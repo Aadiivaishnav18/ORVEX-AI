@@ -118,7 +118,6 @@ const Hero = () => {
         id="home"
         className="relative isolate border-b border-white/[0.07]"
       >
-        {/* Background atmosphere */}
         <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
           <div className="absolute left-1/2 top-0 h-[520px] w-[720px] -translate-x-1/2 rounded-full bg-blue-600/[0.13] blur-[130px]" />
           <div className="absolute -left-40 top-64 h-72 w-72 rounded-full bg-indigo-600/10 blur-[100px]" />
@@ -137,7 +136,6 @@ const Hero = () => {
         </div>
 
         <div className="mx-auto max-w-7xl px-4 pb-16 pt-16 sm:px-8 sm:pb-24 sm:pt-24 lg:px-12 lg:pb-28 lg:pt-28">
-          {/* Status label */}
           <div className="orvex-enter flex justify-center">
             <div className="inline-flex items-center gap-2.5 rounded-full border border-cyan-300/20 bg-cyan-300/[0.055] px-4 py-2 text-[10px] font-semibold tracking-[0.2em] text-cyan-100 sm:text-xs">
               <span className="relative flex h-2 w-2">
@@ -151,7 +149,6 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* Headline */}
           <div className="orvex-enter orvex-delay-1 mx-auto mt-8 max-w-5xl text-center">
             <h1 className="text-[clamp(2.8rem,8vw,6.6rem)] font-semibold leading-[0.98] tracking-[-0.065em]">
               Make room for
@@ -187,12 +184,10 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* 3D artwork stage */}
+          {/* 3D ARTWORK */}
           <div className="orvex-enter orvex-delay-2 relative mx-auto mt-16 max-w-6xl sm:mt-20 lg:mt-24">
-            {/* Ambient glow */}
             <div className="pointer-events-none absolute left-1/2 top-1/2 h-[65%] w-[75%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-blue-500/15 blur-[85px]" />
 
-            {/* Orbital rings */}
             <div className="pointer-events-none absolute left-1/2 top-1/2 aspect-square w-[78%] -translate-x-1/2 -translate-y-1/2">
               <div className="orvex-orbit absolute inset-0 rounded-full border border-cyan-300/20" />
               <div className="absolute inset-[8%] rounded-full border border-blue-400/15 [transform:rotateX(65deg)]" />
@@ -202,7 +197,6 @@ const Hero = () => {
               <span className="orvex-pulse absolute right-[11%] top-[62%] h-1.5 w-1.5 rounded-full bg-blue-300 shadow-[0_0_15px_#60a5fa]" />
             </div>
 
-            {/* Floating labels */}
             <div className="orvex-float pointer-events-none absolute -left-1 top-[12%] z-20 hidden rounded-xl border border-white/10 bg-[#0b1224]/80 p-4 shadow-2xl backdrop-blur-xl sm:block lg:-left-5">
               <div className="flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-cyan-300/10 text-cyan-300">
@@ -238,7 +232,6 @@ const Hero = () => {
               </div>
             </div>
 
-            {/* Interactive perspective image */}
             <div
               className="relative z-10 mx-auto w-full max-w-5xl"
               style={{ perspective: "1400px" }}
@@ -252,27 +245,29 @@ const Hero = () => {
                   transformStyle: "preserve-3d",
                 }}
               >
-                {/* Image frame */}
                 <div className="relative overflow-hidden rounded-2xl border border-cyan-200/20 bg-[#070d1b] shadow-[0_30px_100px_rgba(0,0,0,.6),0_0_45px_rgba(37,99,235,.08)] sm:rounded-3xl">
                   <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-px bg-gradient-to-r from-transparent via-cyan-200/70 to-transparent" />
 
-                  <img
-                    src={BG_IMG}
-                    alt="Orvex-AI futuristic robot companion"
-                    className="block h-auto min-h-[210px] w-full object-cover object-center sm:min-h-0"
-                    onError={(event) => {
-                      console.error("Hero image failed to load:", BG_IMG);
-                      event.currentTarget.style.display = "none";
-                    }}
-                  />
+                  {BG_IMG ? (
+                    <img
+                      src={BG_IMG}
+                      alt="Orvex-AI futuristic robot companion"
+                      className="block min-h-[210px] w-full object-cover object-center sm:min-h-0"
+                      onError={(event) => {
+                        console.error("Hero image failed to load:", BG_IMG);
+                        event.currentTarget.style.display = "none";
+                      }}
+                    />
+                  ) : (
+                    <div className="flex min-h-[210px] items-center justify-center text-cyan-300 sm:min-h-[320px]">
+                      Orvex-AI
+                    </div>
+                  )}
 
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#030712]/45 via-transparent to-blue-950/10" />
-
-                  {/* Subtle glass highlight */}
                   <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/[0.08] via-transparent to-transparent" />
                 </div>
 
-                {/* Floating 3D badge */}
                 <div
                   className="pointer-events-none absolute -bottom-4 left-1/2 z-20 -translate-x-1/2 sm:-bottom-5"
                   style={{ transform: "translateZ(45px) translateX(-50%)" }}
@@ -285,7 +280,6 @@ const Hero = () => {
               </div>
             </div>
 
-            {/* Artwork footer */}
             <div className="mt-12 flex flex-col items-center justify-between gap-3 border-t border-white/[0.07] pt-5 text-[9px] font-medium tracking-[0.2em] text-slate-500 sm:mt-14 sm:flex-row sm:text-[10px]">
               <span>DESIGNED FOR WHAT'S NEXT</span>
               <span className="flex items-center gap-2">
@@ -309,7 +303,6 @@ const Hero = () => {
               <p className="mb-4 text-[10px] font-bold tracking-[0.3em] text-cyan-300 sm:text-xs">
                 A DIFFERENT KIND OF INTELLIGENCE
               </p>
-
               <h2 className="text-3xl font-semibold leading-tight tracking-tight sm:text-5xl">
                 Less friction.
                 <span className="block text-slate-500">
@@ -339,7 +332,6 @@ const Hero = () => {
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-cyan-200/15 bg-cyan-300/[0.07] text-cyan-200 transition duration-300 group-hover:scale-105 group-hover:border-cyan-200/30">
                       <Icon size={21} strokeWidth={1.7} />
                     </div>
-
                     <span className="font-mono text-xs text-slate-600">
                       /{feature.number}
                     </span>
