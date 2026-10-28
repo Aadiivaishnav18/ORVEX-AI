@@ -8,7 +8,6 @@ import { addUser, removeUser } from "../utils/userSlice";
 
 const AuthListener = ({ children }) => {
   const dispatch = useDispatch();
-  const [initializing, setInitializing] = useState(true);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -24,21 +23,11 @@ const AuthListener = ({ children }) => {
       } else {
         dispatch(removeUser());
       }
-
-      setInitializing(false);
     });
 
     return unsubscribe;
   }, [dispatch]);
-
-  if (initializing) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-black text-cyan-400">
-        Loading Orvex-AI...
-      </div>
-    );
-  }
-
+  
   return children;
 };
 

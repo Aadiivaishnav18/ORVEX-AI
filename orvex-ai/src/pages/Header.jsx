@@ -48,7 +48,9 @@ const Header = () => {
         </Link>
 
         {/* Desktop navigation */}
-        <ul className="hidden items-center gap-6 text-sm text-gray-300 md:flex">
+        <div className="hidden md:flex md:items-center">
+
+          <ul className="hidden items-center gap-6 text-sm text-gray-300 md:flex">
           {navLinks.map((link) => (
             <li key={link.label}>
               <a
@@ -60,6 +62,8 @@ const Header = () => {
             </li>
           ))}
         </ul>
+        </div>
+
 
         {/* Desktop actions */}
         <div className="hidden items-center gap-3 md:flex">
