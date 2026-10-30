@@ -1,15 +1,18 @@
 import Header from "../pages/Header";
+import SideBar from "./Sidebar";
 
-const DashBoard = () =>{
+const DashBoard = () => {
+  return (
+    <div>
+      <div>
+        <Header />
+      </div>
 
-    return(
+      <div className="py-4 m-4 w-3/5 bg-amber-50 ">
+        <SideBar />
+      </div>
+    </div>
+  );
+};
 
-        <div>
-
-            <Header />
-        </div>
-
-    )
-}
-
-export default DashBoard; 
+export default DashBoard;
