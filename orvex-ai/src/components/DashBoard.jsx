@@ -2,10 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { PanelLeftOpen, Plus, ArrowUp } from "lucide-react";
 
-import SideBar from "./SideBar";
+import SideBar from "./Sidebar";
 import { auth } from "../utils/firebase";
 import { streamReply } from "../utils/gemini";
-import { subscribeChats, saveChat, deleteChat } from "../utils/chatStore";
+import Markdown from "./Markdown";
+import {
+  subscribeChats,
+  saveChat,
+  newChatId,
+  deleteChat,
+} from "../utils/chatStore";
 
 const DashBoard = () => {
   const user = useSelector((store) => store.user);
@@ -24,17 +30,17 @@ const DashBoard = () => {
   const [error, setError] = useState("");
 
   const bottomRef = useRef(null);
+  const inputRef = useRef(null);
 
   const isMobile = () => !window.matchMedia("(min-width: 768px)").matches;
   const toggleSidebar = () => setSidebarOpen((open) => !open);
 
-  // Live chat history from Firestore
+  // Live chat history
   useEffect(() => {
     if (!uid) return undefined;
     return subscribeChats(uid, setChats);
   }, [uid]);
 
-  // Keep the newest message in view
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
   }, [messages]);
@@ -65,7 +71,11 @@ const DashBoard = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const text = input.trim();
-    if (!text || loading || !uid) return;
+    if (!text || loading) return;
+    if (!uid) {
+      setError("You need to be signed in to chat. Please log in again.");
+      return;
+    }
 
     setInput("");
     setError("");
@@ -78,28 +88,37 @@ const DashBoard = () => {
     let reply = "";
 
     try {
-      // `before` is the earlier conversation, which Gemini uses as context
+      
       for await (const piece of streamReply(before, text)) {
         reply += piece;
         setMessages([...before, userMsg, { role: "model", text: reply }]);
       }
 
       if (!reply) throw new Error("Empty reply");
+      setLoading(false);
 
       const finalMessages = [...before, userMsg, { role: "model", text: reply }];
-      const id = await saveChat(
-        uid,
-        activeId,
-        finalMessages,
-        text.slice(0, 40)
-      );
+      const id = activeId ?? newChatId(uid);
       if (!activeId) setActiveId(id);
+
+  
+      saveChat(uid, id, finalMessages, activeId ? undefined : text.slice(0, 40)).catch(
+        (err) => {
+          console.error("Saving chat failed:", err);
+          setError(
+            `Reply received, but it couldn’t be saved to your history (${
+              err.code || err.message
+            }).`
+          );
+        }
+      );
     } catch (err) {
       console.error("Gemini error:", err);
       setMessages([...before, userMsg]);
       setError("Couldn’t get a reply. Check your API key and connection, then try again.");
     } finally {
       setLoading(false);
+      inputRef.current?.focus();
     }
   };
 
@@ -117,6 +136,8 @@ const DashBoard = () => {
       </button>
 
       <input
+        ref={inputRef}
+        autoFocus
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
@@ -147,7 +168,6 @@ const DashBoard = () => {
 
   return (
     <div className="relative isolate flex h-dvh w-full overflow-hidden bg-black text-white">
-      {/* Soft glows behind the page so the sidebar's blur is visible */}
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
@@ -202,23 +222,19 @@ const DashBoard = () => {
           )}
         </div>
 
-        {messages.length === 0 ? (
-          // Empty state: heading + input centered
-          <div className="flex flex-1 items-center justify-center overflow-y-auto px-4 pb-20">
-            <div className="mx-auto flex w-full max-w-3xl flex-col items-center">
-              <h1 className="mb-8 text-center text-2xl font-medium sm:text-3xl">
-                What’s on your mind today?
-              </h1>
-              <div className="w-full">
-                {errorBox}
-                {inputBar}
-              </div>
-            </div>
-          </div>
-        ) : (
-          <>
-            {/* Conversation */}
-            <div className="flex-1 overflow-y-auto px-4">
+        <div
+          className={
+            messages.length === 0
+              ? "flex flex-1 flex-col items-center justify-center overflow-y-auto px-4 pb-20"
+              : "flex min-h-0 flex-1 flex-col"
+          }
+        >
+          {messages.length === 0 ? (
+            <h1 key="heading" className="mb-8 text-center text-2xl font-medium sm:text-3xl">
+              What’s on your mind today?
+            </h1>
+          ) : (
+            <div key="messages" className="flex-1 overflow-y-auto px-4">
               <div className="mx-auto w-full max-w-3xl space-y-6 py-6">
                 {messages.map((m, i) =>
                   m.role === "user" ? (
@@ -228,28 +244,34 @@ const DashBoard = () => {
                       </p>
                     </div>
                   ) : (
-                    <div key={i} className="flex">
-                      <p className="max-w-full whitespace-pre-wrap break-words text-[15px] leading-7 text-neutral-100">
-                        {m.text || (
-                          <span className="text-neutral-500">Thinking…</span>
-                        )}
-                      </p>
+                    <div key={i} className="min-w-0 max-w-full">
+                      {m.text ? (
+                        <Markdown>{m.text}</Markdown>
+                      ) : (
+                        <span className="text-neutral-500">Thinking…</span>
+                      )}
                     </div>
                   )
                 )}
                 <div ref={bottomRef} />
               </div>
             </div>
+          )}
 
-            {/* Input pinned to the bottom */}
-            <div className="shrink-0 px-4 pb-4 pt-2">
-              <div className="mx-auto w-full max-w-3xl">
-                {errorBox}
-                {inputBar}
-              </div>
+          <div
+            key="input"
+            className={
+              messages.length === 0
+                ? "w-full max-w-3xl"
+                : "w-full shrink-0 px-4 pb-4 pt-2"
+            }
+          >
+            <div className="mx-auto w-full max-w-3xl">
+              {errorBox}
+              {inputBar}
             </div>
-          </>
-        )}
+          </div>
+        </div>
       </main>
     </div>
   );

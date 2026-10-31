@@ -27,7 +27,7 @@ const Logout = () => {
         type="button"
         disabled={loading}
         onClick={handleLogout}
-        className="rounded-lg bg-cyan-400 px-5 py-2 font-semibold text-black hover:bg-cyan-300 disabled:opacity-60"
+        className="rounded-lg bg-amber-300 px-5 py-2 font-semibold text-black hover:bg-amber-200 disabled:opacity-60"
       >
         {loading ? "Signing out..." : "Logout"}
       </button>
