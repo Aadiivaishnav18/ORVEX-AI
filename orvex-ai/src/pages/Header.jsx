@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -31,9 +30,15 @@ const Header = () => {
 
   return (
     <header className="relative z-50 w-full border-b border-cyan-950/60 bg-black/95">
-      <nav className="flex min-h-20 items-center justify-between gap-3 px-4 py-3 sm:px-6">
-        {/* Logo */}
-        <Link to="/" onClick={closeMenu} aria-label="Orvex-AI home">
+      {/* Mobile: logo | button.  Desktop: logo | centered links | actions */}
+      <nav className="grid min-h-20 grid-cols-[1fr_auto] items-center gap-3 px-4 py-3 sm:px-6 md:grid-cols-[1fr_auto_1fr]">
+        {/* Logo (left) */}
+        <Link
+          to="/"
+          onClick={closeMenu}
+          aria-label="Orvex-AI home"
+          className="justify-self-start"
+        >
           {LOGO ? (
             <img
               src={LOGO}
@@ -47,10 +52,8 @@ const Header = () => {
           )}
         </Link>
 
-        {/* Desktop navigation */}
-        <div className="hidden md:flex md:items-center">
-
-          <ul className="hidden items-center gap-6 text-sm text-gray-300 md:flex">
+        {/* Desktop navigation (center) */}
+        <ul className="hidden items-center justify-center gap-8 text-sm text-gray-300 md:flex">
           {navLinks.map((link) => (
             <li key={link.label}>
               <a
@@ -62,11 +65,9 @@ const Header = () => {
             </li>
           ))}
         </ul>
-        </div>
 
-
-        {/* Desktop actions */}
-        <div className="hidden items-center gap-3 md:flex">
+        {/* Desktop actions (right) */}
+        <div className="hidden items-center gap-3 justify-self-end md:flex">
           {user ? (
             <>
               <span className="max-w-40 truncate text-sm text-gray-300">
@@ -79,13 +80,13 @@ const Header = () => {
           )}
         </div>
 
-        {/* Mobile menu button */}
+        {/* Mobile menu button (right) */}
         <button
           type="button"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
           onClick={() => setMenuOpen((open) => !open)}
-          className="flex h-10 w-10 items-center justify-center rounded-lg border border-cyan-400/50 text-2xl text-cyan-300 md:hidden"
+          className="flex h-10 w-10 items-center justify-center justify-self-end rounded-lg border border-cyan-400/50 text-2xl text-cyan-300 md:hidden"
         >
           {menuOpen ? "×" : "☰"}
         </button>
