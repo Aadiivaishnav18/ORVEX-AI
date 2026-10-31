@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { PanelLeftOpen, Plus, ArrowUp } from "lucide-react";
 
-import SideBar from "./Sidebar";
+import SideBar from "./SideBar";
 import { auth } from "../utils/firebase";
 import { streamReply } from "../utils/gemini";
 import { subscribeChats, saveChat, deleteChat } from "../utils/chatStore";
