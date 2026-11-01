@@ -70,7 +70,7 @@ const groupChats = (chats) => {
 
 /* ---------- component ---------- */
 
-const SideBar = ({
+const Sidebar = ({
   chats = [],
   activeId = null,
   onToggle,
@@ -297,4 +297,4 @@ const SideBar = ({
   );
 };
 
-export default SideBar;
+export default Sidebar;

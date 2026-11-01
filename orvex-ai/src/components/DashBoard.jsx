@@ -11,7 +11,7 @@ import {
   GraduationCap,
 } from "lucide-react";
 
-import SideBar from "./Sidebar";
+import SideBar from "./Sidebar.jsx";
 import { auth } from "../utils/firebase";
 import { streamReply } from "../utils/gemini";
 import Markdown from "./Markdown";
