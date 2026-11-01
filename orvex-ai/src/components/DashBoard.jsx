@@ -1,8 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { PanelLeftOpen, Plus, ArrowUp } from "lucide-react";
+import {
+  PanelLeftOpen,
+  Plus,
+  ArrowUp,
+  Sparkles,
+  Code2,
+  Lightbulb,
+  PenLine,
+  GraduationCap,
+} from "lucide-react";
 
-import SideBar from "./SideBar";
+import SideBar from "./Sidebar";
 import { auth } from "../utils/firebase";
 import { streamReply } from "../utils/gemini";
 import Markdown from "./Markdown";
@@ -13,18 +22,70 @@ import {
   deleteChat,
 } from "../utils/chatStore";
 
+const suggestions = [
+  {
+    icon: Code2,
+    title: "Debug my code",
+    prompt: "Help me debug this code and explain what went wrong.",
+  },
+  {
+    icon: Lightbulb,
+    title: "Brainstorm ideas",
+    prompt: "Give me 5 creative project ideas I can build this weekend.",
+  },
+  {
+    icon: PenLine,
+    title: "Write something",
+    prompt: "Help me write a clear, friendly email to my team.",
+  },
+  {
+    icon: GraduationCap,
+    title: "Explain a topic",
+    prompt: "Explain how APIs work in simple words with an example.",
+  },
+];
+
+const greeting = () => {
+  const h = new Date().getHours();
+  if (h < 12) return "Good morning";
+  if (h < 18) return "Good afternoon";
+  return "Good evening";
+};
+
+const ModelAvatar = () => (
+  <div
+    aria-hidden="true"
+    className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-cyan-300 to-cyan-600 text-black shadow-[0_0_18px_rgba(34,211,238,0.35)]"
+  >
+    <Sparkles size={16} />
+  </div>
+);
+
+const TypingDots = () => (
+  <span className="flex items-center gap-1.5 py-2" aria-label="Orvex-AI is typing">
+    {[0, 150, 300].map((d) => (
+      <span
+        key={d}
+        style={{ animationDelay: `${d}ms` }}
+        className="h-2 w-2 rounded-full bg-cyan-400/70 motion-safe:animate-bounce"
+      />
+    ))}
+  </span>
+);
+
 const DashBoard = () => {
   const user = useSelector((store) => store.user);
   const uid = user?.uid ?? auth.currentUser?.uid;
+  const firstName = (user?.displayName || "").split(" ")[0];
 
   const [sidebarOpen, setSidebarOpen] = useState(
     () =>
       typeof window !== "undefined" &&
       window.matchMedia("(min-width: 768px)").matches
   );
-  const [chats, setChats] = useState([]); 
-  const [activeId, setActiveId] = useState(null); 
-  const [messages, setMessages] = useState([]); 
+  const [chats, setChats] = useState([]);
+  const [activeId, setActiveId] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -68,9 +129,8 @@ const DashBoard = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const text = input.trim();
+  const send = async (raw) => {
+    const text = raw.trim();
     if (!text || loading) return;
     if (!uid) {
       setError("You need to be signed in to chat. Please log in again.");
@@ -88,7 +148,6 @@ const DashBoard = () => {
     let reply = "";
 
     try {
-      
       for await (const piece of streamReply(before, text)) {
         reply += piece;
         setMessages([...before, userMsg, { role: "model", text: reply }]);
@@ -101,7 +160,6 @@ const DashBoard = () => {
       const id = activeId ?? newChatId(uid);
       if (!activeId) setActiveId(id);
 
-  
       saveChat(uid, id, finalMessages, activeId ? undefined : text.slice(0, 40)).catch(
         (err) => {
           console.error("Saving chat failed:", err);
@@ -122,10 +180,17 @@ const DashBoard = () => {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    send(input);
+  };
+
+  const empty = messages.length === 0;
+
   const inputBar = (
     <form
       onSubmit={handleSubmit}
-      className="flex w-full items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] py-2 pl-3 pr-2 transition focus-within:border-cyan-400/50"
+      className="flex w-full items-center gap-2 rounded-3xl border border-white/10 bg-neutral-900/70 py-2 pl-3 pr-2 shadow-[0_8px_40px_rgba(0,0,0,0.5)] backdrop-blur-xl transition focus-within:border-cyan-400/50 focus-within:shadow-[0_0_0_4px_rgba(34,211,238,0.08),0_8px_40px_rgba(0,0,0,0.5)]"
     >
       <button
         type="button"
@@ -141,7 +206,7 @@ const DashBoard = () => {
         type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder="Ask Orvex-AI"
+        placeholder="Ask Orvex-AI anything"
         aria-label="Message"
         className="min-w-0 flex-1 bg-transparent py-2 text-base text-white outline-none placeholder:text-neutral-500"
       />
@@ -160,7 +225,7 @@ const DashBoard = () => {
   const errorBox = error && (
     <p
       role="alert"
-      className="mb-3 rounded-lg border border-red-500/20 bg-red-500/10 px-3 py-2 text-sm text-red-400"
+      className="mb-3 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-2.5 text-sm text-red-400"
     >
       {error}
     </p>
@@ -168,15 +233,6 @@ const DashBoard = () => {
 
   return (
     <div className="relative isolate flex h-dvh w-full overflow-hidden bg-black text-white">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 -z-10 overflow-hidden"
-      >
-        <div className="absolute -left-24 top-10 h-96 w-96 rounded-full bg-cyan-500/25 blur-[110px]" />
-        <div className="absolute bottom-0 left-40 h-80 w-80 rounded-full bg-white/10 blur-[110px]" />
-        <div className="absolute right-0 top-1/3 h-96 w-96 rounded-full bg-cyan-400/10 blur-[130px]" />
-      </div>
-
       {sidebarOpen && (
         <div
           onClick={toggleSidebar}
@@ -189,7 +245,7 @@ const DashBoard = () => {
       <aside
         aria-label="Sidebar"
         aria-hidden={!sidebarOpen}
-        className={`fixed inset-y-0 left-0 z-40 shrink-0 overflow-hidden border-r border-white/20 bg-black/40 backdrop-blur-2xl transition-all duration-300 md:static md:z-auto ${
+        className={`fixed inset-y-0 left-0 z-40 shrink-0 overflow-hidden border-r border-white/10 bg-black/50 backdrop-blur-2xl transition-all duration-300 md:static md:z-auto ${
           sidebarOpen
             ? "w-72 max-w-[85%] translate-x-0 md:max-w-none"
             : "invisible w-72 -translate-x-full md:w-0 md:translate-x-0 md:border-r-0"
@@ -207,71 +263,111 @@ const DashBoard = () => {
         </div>
       </aside>
 
-      {/* CHAT */}
+      {/* MAIN */}
       <main className="flex min-w-0 flex-1 flex-col">
-        <div className="flex h-14 shrink-0 items-center px-3">
-          {!sidebarOpen && (
-            <button
-              type="button"
-              onClick={toggleSidebar}
-              aria-label="Open sidebar"
-              className="flex h-10 w-10 items-center justify-center rounded-lg text-neutral-400 transition hover:bg-white/[0.07] hover:text-white"
-            >
-              <PanelLeftOpen size={20} />
-            </button>
-          )}
-        </div>
+        {/* Top bar */}
+        <header className="flex h-14 shrink-0 items-center justify-between px-3">
+          <div className="flex items-center gap-2">
+            {!sidebarOpen && (
+              <>
+                <button
+                  type="button"
+                  onClick={toggleSidebar}
+                  aria-label="Open sidebar"
+                  className="flex h-10 w-10 items-center justify-center rounded-lg text-neutral-400 transition hover:bg-white/[0.07] hover:text-white"
+                >
+                  <PanelLeftOpen size={20} />
+                </button>
+                <span className="text-lg font-bold tracking-tight">
+                  Orvex<span className="text-cyan-400">-AI</span>
+                </span>
+              </>
+            )}
+          </div>
 
-        <div
-          className={
-            messages.length === 0
-              ? "flex flex-1 flex-col items-center justify-center overflow-y-auto px-4 pb-20"
-              : "flex min-h-0 flex-1 flex-col"
-          }
-        >
-          {messages.length === 0 ? (
-            <h1 key="heading" className="mb-8 text-center text-2xl font-medium sm:text-3xl">
-              What’s on your mind today?
-            </h1>
-          ) : (
-            <div key="messages" className="flex-1 overflow-y-auto px-4">
-              <div className="mx-auto w-full max-w-3xl space-y-6 py-6">
+        </header>
+
+        {empty ? (
+          /* ---------- Empty state ---------- */
+          <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto px-4 pb-16">
+            <div className="w-full max-w-2xl">
+              <h1 className="text-center text-4xl font-semibold tracking-tight sm:text-5xl">
+                <span className="bg-gradient-to-r from-white to-cyan-300 bg-clip-text text-transparent">
+                  {greeting()}
+                  {firstName ? `, ${firstName}` : ""}
+                </span>
+              </h1>
+              <p className="mb-8 mt-3 text-center text-lg text-neutral-400">
+                What’s on your mind today?
+              </p>
+
+              {errorBox}
+              {inputBar}
+
+              <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {suggestions.map(({ icon: Icon, title, prompt }) => (
+                  <button
+                    key={title}
+                    type="button"
+                    onClick={() => send(prompt)}
+                    className="group flex items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-left transition hover:border-cyan-400/30 hover:bg-white/[0.06] focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400"
+                  >
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-cyan-400/10 text-cyan-300 transition group-hover:bg-cyan-400/20">
+                      <Icon size={18} />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-medium text-white">
+                        {title}
+                      </span>
+                      <span className="mt-0.5 line-clamp-2 block text-sm text-neutral-500">
+                        {prompt}
+                      </span>
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        ) : (
+          /* ---------- Conversation ---------- */
+          <div className="flex min-h-0 flex-1 flex-col">
+            <div className="flex-1 overflow-y-auto px-4 [scrollbar-color:rgba(255,255,255,0.15)_transparent] [scrollbar-width:thin]">
+              <div className="mx-auto w-full max-w-3xl space-y-8 py-6">
                 {messages.map((m, i) =>
                   m.role === "user" ? (
                     <div key={i} className="flex justify-end">
-                      <p className="max-w-[85%] whitespace-pre-wrap break-words rounded-2xl bg-white/10 px-4 py-2.5 text-[15px] leading-7">
+                      <p className="max-w-[85%] whitespace-pre-wrap break-words rounded-3xl rounded-br-lg border border-cyan-400/20 bg-cyan-400/10 px-4 py-2.5 text-[15px] leading-7 text-cyan-50">
                         {m.text}
                       </p>
                     </div>
                   ) : (
-                    <div key={i} className="min-w-0 max-w-full">
-                      {m.text ? (
-                        <Markdown>{m.text}</Markdown>
-                      ) : (
-                        <span className="text-neutral-500">Thinking…</span>
-                      )}
+                    <div key={i} className="flex min-w-0 gap-3">
+                      <ModelAvatar />
+                      <div className="min-w-0 flex-1">
+                        {m.text ? <Markdown>{m.text}</Markdown> : <TypingDots />}
+                      </div>
                     </div>
                   )
                 )}
                 <div ref={bottomRef} />
               </div>
             </div>
-          )}
 
-          <div
-            key="input"
-            className={
-              messages.length === 0
-                ? "w-full max-w-3xl"
-                : "w-full shrink-0 px-4 pb-4 pt-2"
-            }
-          >
-            <div className="mx-auto w-full max-w-3xl">
-              {errorBox}
-              {inputBar}
+            <div className="relative w-full shrink-0 px-4 pb-3 pt-2">
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-0 -top-8 h-8 bg-gradient-to-t from-black/80 to-transparent"
+              />
+              <div className="mx-auto w-full max-w-3xl">
+                {errorBox}
+                {inputBar}
+                <p className="mt-2 text-center text-xs text-neutral-600">
+                  Orvex-AI can make mistakes. Check important info.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </main>
     </div>
   );

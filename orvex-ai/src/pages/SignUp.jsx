@@ -71,10 +71,8 @@ const Signup = () => {
   };
 
   return (
-    // Mobile: stacked, with the form card overlapping the banner.
-    // Desktop: two columns, image left and form right.
     <main className="grid min-h-dvh w-full bg-[#030712] text-white md:grid-cols-2 lg:grid-cols-[1.2fr_1fr]">
-      {/* BRANDING / IMAGE */}
+
       <section className="relative isolate h-80 overflow-hidden bg-[#030712] sm:h-96 md:sticky md:top-0 md:h-dvh">
         {LOGIN_IMG && (
           <img
@@ -202,7 +200,7 @@ const Signup = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-cyan-400 py-3.5 font-semibold text-black transition hover:bg-cyan-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-xl bg-amber-400 py-3.5 font-semibold text-black transition hover:bg-amber-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? "Creating account..." : "Create account"}
             </button>
@@ -212,7 +210,7 @@ const Signup = () => {
             Already have an account?{" "}
             <Link
               to="/login"
-              className="font-semibold text-cyan-400 transition hover:text-cyan-300"
+              className="font-semibold text-amber-400 transition hover:text-amber-300"
             >
               Sign in
             </Link>

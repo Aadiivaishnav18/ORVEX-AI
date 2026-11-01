@@ -45,10 +45,7 @@ const Login = () => {
   };
 
   return (
-    // Mobile: stacked (banner on top, form below).
-    // Desktop: two columns, image left and form right, each full height.
     <main className="grid min-h-dvh w-full bg-[#030712] text-white md:grid-cols-2 lg:grid-cols-[1.2fr_1fr]">
-      {/* BRANDING / IMAGE */}
       <section className="relative isolate h-80 overflow-hidden bg-[#030712] sm:h-96 md:sticky md:top-0 md:h-dvh">
         {LOGIN_IMG && (
           <img
@@ -58,7 +55,6 @@ const Login = () => {
           />
         )}
 
-        {/* readability overlay: fades to black at the bottom on mobile, to the right on desktop */}
         <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/10 via-black/30 to-[#030712] md:bg-gradient-to-r md:from-black/20 md:via-black/20 md:to-[#030712]" />
 
         <div className="flex h-full flex-col justify-end p-5 pb-24 sm:p-8 sm:pb-28 md:p-10 lg:p-16">
@@ -74,7 +70,6 @@ const Login = () => {
             Your intelligent partner for a smarter tomorrow.
           </p>
 
-          {/* extra detail only where there is room */}
           <div className="mt-8 hidden items-center gap-4 md:flex">
             <div className="h-1 w-20 rounded-full bg-cyan-400 shadow-[0_0_20px_rgba(34,211,238,.6)]" />
             <p className="text-sm text-neutral-400">
@@ -148,7 +143,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-cyan-400 py-3.5 font-semibold text-black transition hover:bg-cyan-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300 focus-visible:ring-offset-2 focus-visible:ring-offset-black disabled:cursor-not-allowed disabled:opacity-60"
+              className="w-full rounded-xl cursor-pointer bg-amber-400 py-3.5 font-semibold text-black transition hover:bg-amber-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2"
             >
               {loading ? "Signing in..." : "Sign in"}
             </button>
@@ -158,7 +153,7 @@ const Login = () => {
             New to Orvex?{" "}
             <Link
               to="/signup"
-              className="font-semibold text-cyan-400 transition hover:text-cyan-300"
+              className="font-semibold text-amber-400 transition hover:text-amber-300"
             >
               Sign up
             </Link>
