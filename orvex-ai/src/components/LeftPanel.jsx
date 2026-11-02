@@ -15,22 +15,16 @@ import { useSelector } from "react-redux";
 
 import Logout from "../pages/Logout";
 
-const navItems = [
-  { label: "Library", icon: Library },
-  { label: "Explore", icon: Compass },
-  { label: "Scheduled", icon: Clock },
-];
 
 const focusRing =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan-400";
 
-const iconBtn = `flex h-9 w-9 items-center justify-center rounded-lg text-neutral-400 transition hover:bg-white/[0.07] hover:text-white ${focusRing}`;
+const iconBtn = `flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg text-neutral-400 transition hover:bg-white/[0.07] hover:text-white ${focusRing}`;
 
-const navRow = `flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm text-neutral-300 transition hover:bg-white/[0.07] hover:text-white ${focusRing}`;
+const navRow = `flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2 text-left text-sm text-neutral-300 transition hover:bg-white/[0.07] hover:text-white ${focusRing}`;
 
 /* ---------- helpers ---------- */
 
-// Works with Firestore Timestamp, Date, or a number
 const toMillis = (v) => {
   if (!v) return null;
   if (typeof v === "number") return v;
@@ -70,7 +64,7 @@ const groupChats = (chats) => {
 
 /* ---------- component ---------- */
 
-const Sidebar = ({
+const LeftPanel = ({
   chats = [],
   activeId = null,
   onToggle,
@@ -157,7 +151,7 @@ const Sidebar = ({
                 type="button"
                 onClick={() => setQuery("")}
                 aria-label="Clear search"
-                className="text-neutral-500 transition hover:text-white"
+                className="cursor-pointer text-neutral-500 transition hover:text-white"
               >
                 <X size={15} />
               </button>
@@ -171,7 +165,7 @@ const Sidebar = ({
         <button
           type="button"
           onClick={onNewChat}
-          className={`mb-2 flex w-full items-center gap-3 rounded-xl bg-cyan-400/10 px-3 py-2.5 text-sm font-medium text-cyan-200 ring-1 ring-inset ring-cyan-400/20 transition hover:bg-cyan-400/15 ${focusRing}`}
+          className={`mb-2 flex w-full cursor-pointer items-center gap-3 rounded-xl bg-cyan-400/10 px-3 py-2.5 text-sm font-medium text-cyan-200 ring-1 ring-inset ring-cyan-400/20 transition hover:bg-cyan-400/15 ${focusRing}`}
         >
           <SquarePen size={18} className="text-cyan-400" />
           New chat
@@ -230,7 +224,7 @@ const Sidebar = ({
                         onClick={() => onSelectChat(chat)}
                         aria-current={active ? "true" : undefined}
                         title={title}
-                        className={`flex w-full items-center rounded-lg py-2 pl-3 pr-10 text-left text-sm transition ${focusRing} ${
+                        className={`flex w-full cursor-pointer items-center rounded-lg py-2 pl-3 pr-10 text-left text-sm transition ${focusRing} ${
                           active
                             ? "bg-white/[0.09] text-white"
                             : "text-neutral-400 hover:bg-white/[0.06] hover:text-white"
@@ -248,7 +242,7 @@ const Sidebar = ({
                               onDeleteChat(chat);
                             }}
                             aria-label={`Confirm delete ${title}`}
-                            className="flex h-7 w-7 items-center justify-center rounded text-red-400 transition hover:bg-red-500/15"
+                            className="flex h-7 w-7 cursor-pointer items-center justify-center rounded text-red-400 transition hover:bg-red-500/15"
                           >
                             <Check size={15} />
                           </button>
@@ -256,7 +250,7 @@ const Sidebar = ({
                             type="button"
                             onClick={() => setConfirmId(null)}
                             aria-label="Cancel delete"
-                            className="flex h-7 w-7 items-center justify-center rounded text-neutral-400 transition hover:bg-white/10 hover:text-white"
+                            className="flex h-7 w-7 cursor-pointer items-center justify-center rounded text-neutral-400 transition hover:bg-white/10 hover:text-white"
                           >
                             <X size={15} />
                           </button>
@@ -266,7 +260,7 @@ const Sidebar = ({
                           type="button"
                           onClick={() => setConfirmId(chat.id)}
                           aria-label={`Delete ${title}`}
-                          className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-md text-neutral-500 opacity-0 transition hover:bg-white/10 hover:text-red-400 focus-visible:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100"
+                          className="absolute right-2 top-1/2 flex h-7 w-7 -translate-y-1/2 cursor-pointer items-center justify-center rounded-md text-neutral-500 opacity-0 transition hover:bg-white/10 hover:text-red-400 focus-visible:opacity-100 group-hover:opacity-100 [@media(hover:none)]:opacity-100"
                         >
                           <Trash2 size={15} />
                         </button>
@@ -297,4 +291,4 @@ const Sidebar = ({
   );
 };
 
-export default Sidebar;
+export default LeftPanel;
